@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)https://www.cnblogs.com/dataxon/p/12533110.html -->
+<html lang="zh-cn" style="--olcb-folder-code-block-max-height: 80vh; --cnb-code-bg: rgb(245, 245, 245); --cnb-code-font-size: 12px; --cnb-code-color: rgb(68, 68, 68);"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin-when-cross-origin">
+    <meta name="description" content="[toc] 参考资料： &#39;m3u8格式介绍&#39; &#39;ts文件格式介绍&#39; &#39;视频下载&#39; &#39;Python读取m3u8文件&#39; &#39;ts转mp4&#39; 先定义保存文件的函数 从 m3u8 文件中解析出 ts 信息 怎么查找m3u8文件？ 假设在chrome上打开视频页 右键检查，Network All ，过滤 一般可">
+    <meta property="og:description" content="[toc] 参考资料： &#39;m3u8格式介绍&#39; &#39;ts文件格式介绍&#39; &#39;视频下载&#39; &#39;Python读取m3u8文件&#39; &#39;ts转mp4&#39; 先定义保存文件的函数 从 m3u8 文件中解析出 ts 信息 怎么查找m3u8文件？ 假设在chrome上打开视频页 右键检查，Network All ，过滤 一般可">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>爬虫 | Python下载m3u8视频 - dataxon - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="https://common.cnblogs.com/favicon.svg" type="image/svg+xml">
+    
+    <style>#home :not(.cnblogs_code):not(.cnblogs_Highlighter)>pre:not([highlighted]):not([class*="brush:"]) code:not(.hljs), :not(.cnblogs_code):not(.cnblogs_Highlighter)>pre:not([highlighted]):not([class*="brush:"]) code:not(.hljs) {background: rgb(245, 245, 245);
+        padding: 12px;
+        border: 1px solid rgb(204, 204, 204);
+        border-radius: 3px;
+        border-color: transparent;
+        color: rgb(68, 68, 68);
+        font-family: "Courier New", sans-serif;
+        font-size: 12px</style><link rel="stylesheet" href="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/blog-common.min.css">
+    
+
+    <link id="MainCss" rel="stylesheet" href="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/bundle-custom.min.css">
+        <link id="highlighter-theme-cnblogs" type="text/css" rel="stylesheet" href="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/cnblogs.css">
+    <link type="text/css" rel="stylesheet" href="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/custom.css">
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/bundle-custom-mobile.min.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/dataxon/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/dataxon/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/dataxon/wlwmanifest.xml">
+    <script>
+        var currentBlogId = 587783;
+        var currentBlogApp = 'dataxon';
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'Custom';
+        var visitorUserId = '';
+        var hasCustomScript = true;
+        window.cb_enable_mathjax = true;
+        window.mathEngine = 0;
+        window.codeHighlightEngine = 1;
+        window.enableCodeLineNumber = false;
+        window.codeHighlightTheme = 'cnblogs';
+        window.darkModeCodeHighlightTheme = 'vs2015';
+        window.isDarkCodeHighlightTheme = false;
+        window.isDarkModeCodeHighlightThemeDark = true;
+        window.isDisableCodeHighlighter = false;
+        window.enableCodeThemeTypeFollowSystem = false;
+        window.enableMacStyleCodeBlock = false;
+    </script>
+        <script>
+            window.currentPostId = 12533110;
+            window.currentPostDateAdded = '2020-03-20 17:29';
+        </script>
+    <script src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/jquery-2.2.0.min.js.下载"></script>
+    <script src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/blog-common.min.js.下载"></script><style>.medium-zoom-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 300ms;
+  will-change: opacity;
+}
+
+.medium-zoom--opened .medium-zoom-overlay {
+  cursor: pointer;
+  cursor: zoom-out;
+  opacity: 1;
+}
+
+.medium-zoom-image {
+  cursor: pointer;
+  cursor: zoom-in;
+  /*
+    The `transition` is marked as "!important" for the animation to happen
+    even though it's overriden by another inline `transition` style attribute.
+
+    This is problematic with frameworks that generate inline styles on their
+    images (e.g. Gatsby).
+
+    See https://github.com/francoischalifour/medium-zoom/issues/110
+   */
+  transition: transform 300ms cubic-bezier(0.2, 0, 0.2, 1) !important;
+}
+
+.medium-zoom-image--hidden {
+  visibility: hidden;
+}
+
+.medium-zoom-image--opened {
+  position: relative;
+  cursor: pointer;
+  cursor: zoom-out;
+  will-change: transform;
+}
+</style><script id="hljs-script" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/highlight.min.js.下载" type="text/javascript" async=""></script>
+        <script>updateCustomBlogReferrer();</script>
+    
+
+    
+<meta property="og:image" content="https://common.cnblogs.com/logo_square.png"><meta http-equiv="origin-trial" content="AymqwRC7u88Y4JPvfIF2F37QKylC04248hLCdJAsh8xgOfe/dVJPV3XS3wLFca1ZMVOtnBfVjaCMTVudWM//5g4AAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjk1MTY3OTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"><link rel="shortcut icon" href="https://blog-static.cnblogs.com/files/dataxon/dataxon_favicon.ico" type="image/x-icon"><link rel="stylesheet" href="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/lightbox.min.css"><meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AgRYsXo24ypxC89CJanC+JgEmraCCBebKl8ZmG7Tj5oJNx0cmH0NtNRZs3NB5ubhpbX/bIt7l2zJOSyO64NGmwMAAACCeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="A/ERL66fN363FkXxgDc6F1+ucRUkAhjEca9W3la6xaLnD2Y1lABsqmdaJmPNaUKPKVBRpyMKEhXYl7rSvrQw+AkAAACNeyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="A6OdGH3fVf4eKRDbXb4thXA4InNqDJDRhZ8U533U/roYjp4Yau0T3YSuc63vmAs/8ga1cD0E3A7LEq6AXk1uXgsAAACTeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZXN5bmRpY2F0aW9uLmNvbTo0NDMiLCJmZWF0dXJlIjoiRmxlZGdlQmlkZGluZ0FuZEF1Y3Rpb25TZXJ2ZXIiLCJleHBpcnkiOjE3MTkzNTk5OTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><script src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/f.txt" async=""></script></head>
+<body class="skin-custom no-navbar mathjax2 hljs-engine"><div class="esa-mobile-menu"></div>
+    <a name="top"></a>
+    <div id="top_nav" class="navbar forpc navbar-custom">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding">
+                    <a href="https://www.cnblogs.com/" title="开发者的网上家园" role="banner">
+                        <img src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/logo.svg" alt="博客园Logo">
+                    </a>
+                </li>
+                <li><a href="https://cnblogs.vip/">会员</a></li>
+                <li>
+                    <a href="https://news.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-news&#39;)">新闻</a>
+                </li>
+                <li>
+                    <a href="https://q.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-q&#39;)">博问</a>
+                </li>                              
+                <li>
+                    <a href="https://ing.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-ing&#39;)">闪存</a>
+                </li>
+                <li>
+                    <a href="https://edu.cnblogs.com/" onclick="countClicks(&#39;nav&#39;, &#39;skin-navbar-edu&#39;)">班级</a>
+                </li>
+                <li><a href="https://hh.hanghang.com/AIjingpinke" target="_blank">AI培训</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search dropdown" action="https://zzk.cnblogs.com/s" method="get" role="search">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="search" tabindex="3" autocomplete="off">
+                        <button id="zzk_search_button" onclick="window.navbarSearchManager.triggerActiveOption()">
+                            <img id="search_icon" class="focus-hidden" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/search.svg" alt="搜索">
+                            <img class="hidden focus-visible" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/enter.svg" alt="搜索">
+                        </button>
+                        <ul id="navbar_search_options" class="dropdown-menu quick-search-menu">
+                            <li tabindex="0" class="active" onclick="zzkSearch(event, document.getElementById(&#39;zzk_search_input&#39;).value)">
+                                <div class="keyword-wrapper">
+                                    <img src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/search.svg" alt="搜索">
+                                    <div class="keyword"></div>
+                                </div>
+                                <span class="search-area">所有博客</span>
+                            </li>
+                                    <li tabindex="1" onclick="zzkBlogSearch(event, &#39;dataxon&#39;, document.getElementById(&#39;zzk_search_input&#39;).value)">
+                                        <div class="keyword-wrapper">
+                                            <img src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/search.svg" alt="搜索">
+                                            <div class="keyword"></div>
+                                        </div>
+                                        <span class="search-area">当前博客</span>
+                                    </li>
+                        </ul>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a class="navbar-user-info navbar-blog" href="https://i.cnblogs.com/EditPosts.aspx?opt=1" alt="写随笔" title="写随笔" style="display: none;">
+                        <img id="new_post_icon" class="navbar-icon" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/newpost.svg" alt="写随笔">
+                    </a>
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客" style="display: none;">
+                        <img id="myblog_icon" class="navbar-icon" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/myblog.svg" alt="我的博客">
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息" style="display: none;">
+                        <img id="msg_icon" class="navbar-icon" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/message.svg" alt="短消息">
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <a id="navbar_lite_mode_indicator" data-current-page="blog" style="display: none" href="javascript:void(0)" alt="简洁模式" title="简洁模式启用，您在访问他人博客时会使用简洁款皮肤展示">
+                        <img class="navbar-icon" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/lite-mode-on.svg" alt="简洁模式">
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown" style="display: none;">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/avatar-default.svg" alt="用户头像">
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" id="navbar_lite_mode_toggle" title="简洁模式会使用简洁款皮肤显示所有博客">
+    简洁模式 <img id="navbar_lite_mode_on" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/lite-mode-check.svg" class="hide" style="display: none;"><span id="navbar_lite_mode_spinner" class="hide">...</span>
+</a>
+                            <a href="javascript:void(0)" onclick="account.logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup" style="display: inline;">注册</a>
+                    <a class="navbar-anonymous" href="javascript:void(0);" onclick="account.login()" style="display: inline;">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+
+    <!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+        <a id="lnkBlogLogo" href="https://www.cnblogs.com/dataxon/"><img id="blogLogo" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/logo.gif" alt="返回主页"></a>		
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/dataxon/">dataxon</a>
+</h1>
+<h2>Rock with Data !</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li>
+<i></i></li>
+<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/dataxon/">
+首页</a>
+<i></i></li><li><a class="menu" href="https://www.cnblogs.com/dataxon/p/">归档</a><i></i></li>
+                            <li class="esa-has-subnavs">
+                                <a class="menu" href="javascript:void(0);">资源
+                                    <svg class="arrow" width="12px" height="8px" viewBox="0 0 14 8" xml:space="preserve" fill="none" stroke="rgb(49, 70, 89)"><path d="M1,1l6.2,6L13,1"></path></svg>
+                                </a>
+                                <ul class="esa-sub-navs"><li><a class="menu" href="http://hao.199it.com/">数据网站导航</a></li><li><a class="menu" href="https://tool.lu/">在线工具大全</a></li><li><a class="menu" href="https://www.cnblogs.com/dataxon/p/12535666.html">数据分析资源</a></li><li><a class="menu" href="https://www.cnblogs.com/dataxon/p/12536516.html">机器学习资源</a></li><li><a class="menu" href="http://jobbole.github.io/awesome-python-cn/">Python 资源</a></li><li><a class="menu" href="https://www.cnblogs.com/dataxon/p/12530971.html">技术学习资源</a></li></ul>
+                            <i></i></li>
+<li>
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+<i></i></li>
+<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/dataxon">
+联系</a><i></i></li>
+<li>
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/dataxon/rss/">
+订阅</a>
+<!--<partial name="./Shared/_XmlLink.cshtml" model="Model" /></li>--><i></i></li>
+<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+<i></i></li>
+</ul>
+
+
+		<div class="blogStats">
+			<span id="stats_post_count">随笔 - 44&nbsp; </span>
+<span id="stats_article_count">文章 - 0&nbsp; </span>
+<span id="stats-comment_count">评论 - 4&nbsp; </span>
+<span id="stats-total-view-count">阅读 - 
+<span title="总阅读数: 64228">
+64228</span></span>
+
+		</div><!--end: blogStats -->
+	
+                <svg t="1573264861612" class="icon esa-search-btn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7386" width="32" height="32" data-spm-anchor-id="a313x.7781069.0.i8">
+                    <path fill="rgb(49, 70, 89)" d="M616.362667 580.608h-23.808l-8.533334-8.128a196.16 196.16 0 1 0-21.098666 21.098667l8.128 8.533333v23.808l150.805333 150.165333 44.8-44.8z m-180.8 0a135.594667 135.594667 0 1 1 135.594666-135.594667 135.402667 135.402667 0 0 1-135.573333 135.594667z" p-id="7387"></path>
+                </svg>
+                <svg t="1573265135257" class="icon esa-search-close" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15367" width="32" height="32">
+                    <path fill="rgb(49, 70, 89)" d="M515.23600182 491.06853843L378.27564815 354.10818478a17.09155825 17.09155825 0 1 0-24.17885764 24.15606913l136.96035332 136.97174792-136.96035331 136.97174789a17.09155825 17.09155825 0 1 0 24.16746339 24.16746337l136.97174791-136.96035366 136.9717479 136.96035366a17.09155825 17.09155825 0 1 0 24.16746337-24.15606912l-136.96035366-136.98314215 136.96035366-136.96035367a17.09155825 17.09155825 0 1 0-24.16746337-24.16746337l-136.96035366 136.96035364z" p-id="15368"></path>
+                </svg></div><!--end: navigator 博客导航栏 -->
+
+                <div class="esa-search-box">
+                    <div class="div_my_zzk">
+                        <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk" placeholder="Type to Search">&nbsp;<input onclick="zzk_go()" type="button" value="搜 索" id="btnZzk" class="btn_my_zzk">
+                    </div>
+                </div></div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    <!--done-->
+    <div id="topics">
+        <div class="post">
+            <h1 class="postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/dataxon/p/12533110.html">
+    <span role="heading" aria-level="2">爬虫 | Python下载m3u8视频</span>
+    
+
+
+
+</a><button class="cnblogs-toc-button" title="显示目录导航"></button>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                    <div id="cnblogs_post_description" style="display: none">
+        
+        本文讲解了如何使用Python下载m3u8格式的视频。
+    </div>
+<div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+<p></p><div class="toc"><div class="toc-container-header">目录</div><ul><li><a href="https://www.cnblogs.com/dataxon/p/12533110.html#%E4%BB%8E-m3u8-%E6%96%87%E4%BB%B6%E4%B8%AD%E8%A7%A3%E6%9E%90%E5%87%BA-ts-%E4%BF%A1%E6%81%AF" rel="noopener">从 m3u8 文件中解析出 ts 信息</a></li><li><a href="https://www.cnblogs.com/dataxon/p/12533110.html#%E6%8C%89%E6%97%B6%E9%97%B4%E6%88%AA%E5%8F%96%E8%A7%86%E9%A2%91" rel="noopener">按时间截取视频</a></li><li><a href="https://www.cnblogs.com/dataxon/p/12533110.html#%E6%8A%93%E5%8F%96-ts-%E6%96%87%E4%BB%B6" rel="noopener">抓取 ts 文件</a><ul><li><a href="https://www.cnblogs.com/dataxon/p/12533110.html#%E5%8D%95%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95" rel="noopener">单文件测试</a></li><li><a href="https://www.cnblogs.com/dataxon/p/12533110.html#%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD" rel="noopener">批量下载</a></li></ul></li><li><a href="https://www.cnblogs.com/dataxon/p/12533110.html#%E5%90%88%E5%B9%B6-ts-%E6%96%87%E4%BB%B6" rel="noopener">合并 ts 文件</a></li><li><a href="https://www.cnblogs.com/dataxon/p/12533110.html#%E5%B0%86%E5%90%88%E5%B9%B6%E7%9A%84ts%E6%96%87%E4%BB%B6%E8%BD%AC%E5%8C%96%E4%B8%BA%E8%A7%86%E9%A2%91%E6%96%87%E4%BB%B6" rel="noopener">将合并的ts文件转化为视频文件</a></li></ul></div><p></p>
+<p>参考资料：</p>
+<ul>
+<li><a href="https://www.cnblogs.com/renhui/p/10351870.html" target="_blank" rel="noopener">m3u8格式介绍</a></li>
+<li><a href="https://www.cnblogs.com/renhui/p/10362640.html" target="_blank" rel="noopener">ts文件格式介绍</a></li>
+<li><a href="https://www.zhihu.com/question/48914419" target="_blank" rel="noopener">视频下载</a></li>
+<li><a href="https://blog.csdn.net/kingyuan666/article/details/90247526" target="_blank" rel="noopener">Python读取m3u8文件</a></li>
+<li><a href="http://blog.sciencenet.cn/blog-3196388-1094278.html" target="_blank" rel="noopener">ts转mp4</a></li>
+</ul>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_0">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_0"><span class="hljs-comment"># 配置环境</span>
+
+<span class="hljs-keyword">import</span> requests,re
+<span class="hljs-keyword">import</span> sys,time
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> glob
+
+work_dir = os.getcwd()
+<span class="hljs-built_in">print</span>(work_dir)
+
+<span class="hljs-comment"># 用来保存ts文件</span>
+file_dir = os.path.join(work_dir,<span class="hljs-string">'file_tmp'</span>)
+
+<span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> os.path.exists(file_dir):
+    os.mkdir(file_dir)
+</code></pre>
+<p>先定义保存文件的函数</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_1">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_1"><span class="hljs-keyword">def</span> <span class="hljs-title function_">savefile</span>(<span class="hljs-params">file_url,file_name</span>):
+    <span class="hljs-comment"># 配置headers防止被墙，一般问题不大</span>
+    headers = {
+        <span class="hljs-string">'user-agent'</span>: <span class="hljs-string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Safari/537.36'</span>
+        }
+    
+    r = requests.get(file_url,headers=headers)
+    
+    <span class="hljs-keyword">if</span> r.status_code == <span class="hljs-number">200</span>:
+        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_name, <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f:
+            f.write(r.content)
+</code></pre>
+<h1 id="2642601656">从 m3u8 文件中解析出 ts 信息<button class="cnblogs-toc-button" title="显示目录导航"></button><a href="https://www.cnblogs.com/dataxon/p/12533110.html#2642601656" class="esa-anchor">#</a></h1>
+<p><strong>怎么查找m3u8文件？</strong></p>
+<p>假设在chrome上打开视频页</p>
+<p>右键检查，Network -&gt; All ，过滤<code>.m3u8</code></p>
+<p>一般可以看到两个m3u8地址，其中一个是带<code>hls</code>的，这个文件可以解析出ts信息</p>
+<p>拿个网址来举例，比如<a href="https://app.movie/index.php/vod/play/id/199028/sid/3/nid/1.html" target="_blank" rel="noopener">这个视频</a></p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_2">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_2"><span class="hljs-comment"># 如果url中没有hls的，那就是源m3u8文件</span>
+<span class="hljs-comment"># 源m3u8文件会跳转到另一个m3u8文件，这个地址中就带有hls</span>
+
+<span class="hljs-comment"># 这个是源m3u8文件，不带hls</span>
+url_m3u8 = <span class="hljs-string">'https://wuji.zhulong-zuida.com/20190706/762_c260ca6c/index.m3u8'</span>
+
+r = requests.get(url_m3u8)
+r.encoding=<span class="hljs-string">'utf-8'</span>
+
+</code></pre>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_3">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_3"><span class="hljs-comment"># 查看内容</span>
+
+<span class="hljs-built_in">print</span>(r.text)
+</code></pre>
+<p>输出：<br>
+<code>#EXTM3U</code><br>
+<code>#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=800000,RESOLUTION=1080x608</code><br>
+<code>800k/hls/index.m3u8</code></p>
+<p>可以看到最后一行就是跳转后的m3u8地址</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_4">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_4"><span class="hljs-comment"># 合成带有hls的m3u8地址</span>
+<span class="hljs-keyword">if</span> r.text.split(<span class="hljs-string">'\n'</span>)[-<span class="hljs-number">1</span>] == <span class="hljs-string">''</span>:
+    hls_mark = r.text.split(<span class="hljs-string">'\n'</span>)[-<span class="hljs-number">2</span>] <span class="hljs-comment"># 以防\n结尾</span>
+<span class="hljs-keyword">else</span>:
+    hls_mark = r.text.split(<span class="hljs-string">'\n'</span>)[-<span class="hljs-number">1</span>]
+url_m3u8_hls = url_m3u8.replace(<span class="hljs-string">'index.m3u8'</span>,hls_mark)
+url_m3u8_hls
+</code></pre>
+<p>输出：<br>
+<code>'https://wuji.zhulong-zuida.com/20190706/762_c260ca6c/800k/hls/index.m3u8'</code></p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_5">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_5"><span class="hljs-comment"># 不过有时候可能没法查到跳转后的带hls的连接</span>
+<span class="hljs-comment"># 但是视频加载文件的网址格式为 主url+文件名.ts</span>
+<span class="hljs-comment"># 这个主url是带hls的</span>
+<span class="hljs-comment"># m3u8的index目录 格式为 主url/index.m3u8</span>
+url_m3u8_hls = <span class="hljs-string">'https://wuji.zhulong-zuida.com/20190706/762_c260ca6c/800k/hls/index.m3u8'</span>
+</code></pre>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_6">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_6"><span class="hljs-comment"># 带有hls的m3u8文件中获得的是ts信息</span>
+<span class="hljs-comment"># 包括ts文件名称，以及该文件的持续时间</span>
+
+<span class="hljs-comment"># 这个文件有用，先保存一下</span>
+file_m3u8 = url_m3u8_hls.split(<span class="hljs-string">'/'</span>)[-<span class="hljs-number">1</span>]
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_m3u8,<span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f:
+    f.write(r.content)
+</code></pre>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_7">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_7"><span class="hljs-comment"># iter_lines得到的是bytesstring</span>
+text_bytes = <span class="hljs-built_in">list</span>(r.iter_lines())
+
+<span class="hljs-comment"># 转化成正常string</span>
+text_string = [i.decode(<span class="hljs-string">'utf-8'</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> text_bytes]
+</code></pre>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_8">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_8"><span class="hljs-comment"># 筛选以.ts结尾的行</span>
+<span class="hljs-comment"># 有些情况下可能是以其他格式的文件，比如png，下载后修改后缀即可</span>
+<span class="hljs-comment"># ts_name = [i for i in text_string if i.endswith('.ts')]</span>
+ts_name = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> text_string <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> i.startswith(<span class="hljs-string">'#'</span>)]
+
+ts_name[:<span class="hljs-number">3</span>]
+</code></pre>
+<p>输出：<br>
+<code>['36962c1a1b0000000.ts', '36962c1a1b0000001.ts', '36962c1a1b0000002.ts']</code></p>
+<p>有时候ts文件信息中可能还包含一部分路径信息。<br>
+因为路径都是统一的，所以我们只需要文件名就可以了</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_9">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_9"><span class="hljs-keyword">if</span> <span class="hljs-string">'/'</span> <span class="hljs-keyword">in</span> ts_name[<span class="hljs-number">1</span>]:
+    <span class="hljs-comment"># 部分ts文件名中带有路径信息，只保留文件名即可</span>
+    ts_name = [i.split(<span class="hljs-string">'/'</span>)[-<span class="hljs-number">1</span>] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> ts_name]
+    
+    ts_name[:<span class="hljs-number">3</span>]
+</code></pre>
+<p>接下来处理时间戳。</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_10">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_10"><span class="hljs-comment"># 筛选带有时间的行</span>
+ts_time = [<span class="hljs-built_in">float</span>(re.findall(<span class="hljs-string">'[.\d]+'</span>,i)[<span class="hljs-number">0</span>]) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> text_string <span class="hljs-keyword">if</span> i.startswith(<span class="hljs-string">'#EXTINF'</span>)]
+
+ts_time[:<span class="hljs-number">3</span>]
+</code></pre>
+<p>输出：<br>
+<code>[4.1283, 4.3785, 4.17]</code></p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_11">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_11"><span class="hljs-comment"># 检验解析出来的时间戳和文件名数量是否匹配</span>
+<span class="hljs-built_in">len</span>(ts_name) == <span class="hljs-built_in">len</span>(ts_time)
+</code></pre>
+<p>输出：<br>
+<code>True</code></p>
+<h1 id="1783961223">按时间截取视频<button class="cnblogs-toc-button" title="显示目录导航"></button><a href="https://www.cnblogs.com/dataxon/p/12533110.html#1783961223" class="esa-anchor">#</a></h1>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_12">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_12"><span class="hljs-comment"># 建立时间基准</span>
+<span class="hljs-comment"># 得到累计时间序列</span>
+time_cum = np.cumsum(ts_time)
+</code></pre>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_13">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_13"><span class="hljs-comment"># 那如果我要看51分05秒~55分46秒，应该下载哪些文件呢？</span>
+
+time_start = <span class="hljs-number">1</span>*<span class="hljs-number">3600</span>+<span class="hljs-number">26</span>*<span class="hljs-number">60</span>+<span class="hljs-number">5</span>
+time_end = <span class="hljs-number">1</span>*<span class="hljs-number">3600</span>+<span class="hljs-number">46</span>*<span class="hljs-number">60</span>+<span class="hljs-number">20</span>
+
+<span class="hljs-comment"># 如果有多段时间截取，可以写个函数将时间序列进行转化</span>
+<span class="hljs-comment"># 输入：[(0.0.0,0.9.30),(0.10.0,0.20.0)]</span>
+<span class="hljs-comment"># 输出 累计时间戳的index [(0,38),(40,80)]</span>
+</code></pre>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_14">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_14"><span class="hljs-comment"># 对于起始时间</span>
+<span class="hljs-comment"># 筛选累计时间戳&lt;开始时间的最大值，再找对应的index</span>
+
+index_start = <span class="hljs-built_in">sum</span>(time_cum&lt;time_start)+<span class="hljs-number">1</span>-<span class="hljs-number">1</span>
+<span class="hljs-comment"># +1是为了截取</span>
+<span class="hljs-comment"># -1 是为了矫正index序号</span>
+</code></pre>
+<p>这个就是最终的index，我们这里的原则是最后取到的时间区间是完全包含目标区间的</p>
+<p>这里的index实际上做了一个位移的，本来index是0开始，所以说是351</p>
+<p>e.g. 假设前3个ts的时间为2,3,3</p>
+<p>现在我要的是第4秒后的信息，得到的累计时间序列是2,5,8</p>
+<p>按照我们刚才的那个判断，&lt;4的只有1个时间位，但从自然顺序上我们是要从第二个ts文件开始截取</p>
+<p>这就相当于index不用再变动了，如果其他软件序列语法是1开始的话，那么这个index</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_15">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_15"><span class="hljs-comment"># 对于截止时间</span>
+index_end = <span class="hljs-built_in">len</span>(time_cum) - <span class="hljs-built_in">sum</span>(time_cum&gt;time_end) +<span class="hljs-number">1</span> - <span class="hljs-number">1</span>
+</code></pre>
+<p>同样假设 整个累计时间序列为 2,5,8,10</p>
+<p>现在截取到6秒，所以要取到第3个ts文件(Python index为2)</p>
+<p>时间序列长度4-大于6的个数2+偏移1位-index矫正1位</p>
+<p>这就是最终的index</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_16">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_16"><span class="hljs-built_in">print</span>(index_start,index_end)
+</code></pre>
+<p>输出：<br>
+<code>1290 1594</code></p>
+<h1 id="465132375">抓取 ts 文件<button class="cnblogs-toc-button" title="显示目录导航"></button><a href="https://www.cnblogs.com/dataxon/p/12533110.html#465132375" class="esa-anchor">#</a></h1>
+<h2 id="3969111130">单文件测试<button class="cnblogs-toc-button" title="显示目录导航"></button><a href="https://www.cnblogs.com/dataxon/p/12533110.html#3969111130" class="esa-anchor">#</a></h2>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_17">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_17">ts_name[<span class="hljs-number">0</span>] <span class="hljs-comment"># 这个是片头</span>
+</code></pre>
+<p>输出：<br>
+<code>'36962c1a1b0000000.ts'</code></p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_18">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_18"><span class="hljs-comment"># 这个网址去除掉最后的文件名就是**主url**了。</span>
+file_url = <span class="hljs-string">'https://wuji.zhulong-zuida.com/20190706/762_c260ca6c/800k/hls/36962c1a1b0000000.ts'</span>
+
+<span class="hljs-comment"># 提取文件名</span>
+file_name = os.path.join(file_dir,file_url.split(<span class="hljs-string">'/'</span>)[-<span class="hljs-number">1</span>])
+
+<span class="hljs-comment"># 下载ts文件到本地</span>
+savefile(file_url,file_name)
+</code></pre>
+<h2 id="4126256877">批量下载<button class="cnblogs-toc-button" title="显示目录导航"></button><a href="https://www.cnblogs.com/dataxon/p/12533110.html#4126256877" class="esa-anchor">#</a></h2>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_19">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_19"><span class="hljs-comment"># 先看下我们要抓取的ts文件的index的起始位置</span>
+<span class="hljs-built_in">print</span>(index_start,index_end)
+</code></pre>
+<p>输出：<br>
+<code>1290 1594</code></p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_20">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_20"><span class="hljs-comment"># ts文件的主url以/hls/结束</span>
+url_m3u8_hls
+</code></pre>
+<p>输出：<br>
+<code>'https://wuji.zhulong-zuida.com/20190706/762_c260ca6c/800k/hls/index.m3u8'</code></p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_21">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_21"><span class="hljs-comment"># 提取主url</span>
+url_ts_main = url_m3u8_hls.replace(<span class="hljs-string">'index.m3u8'</span>,<span class="hljs-string">''</span>)
+<span class="hljs-comment"># 绝大部分hls文件的名称都是index.m3u8,个别的也可能是其他名字</span>
+
+
+<span class="hljs-comment"># range 函数取头不取尾，所以+1</span>
+<span class="hljs-keyword">for</span> idx <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(index_start,index_end+<span class="hljs-number">1</span>):
+    <span class="hljs-comment"># 拼接url</span>
+    file_name = ts_name[idx]
+    file_url = url_ts_main+file_name
+    
+    <span class="hljs-comment"># 对于后缀可能是其他格式的情况下，保存为以.ts结尾的文件即可</span>
+    <span class="hljs-comment"># 有的服务器可能会改变后缀假装自己不是ts文件</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> file_name.endswith(<span class="hljs-string">'ts'</span>):
+        tmp_name = file_name.split(<span class="hljs-string">'.'</span>)[:-<span class="hljs-number">1</span>]
+        tmp_name.append(<span class="hljs-string">'ts'</span>)
+        file_name = <span class="hljs-string">'.'</span>.join(tmp_name)
+
+    file_path = os.path.join(file_dir,file_name)
+    
+    <span class="hljs-comment"># 保存文件</span>
+    savefile(file_url,file_path)
+    
+    <span class="hljs-comment"># 提示进度</span>
+    sys.stdout.write(<span class="hljs-string">'\r当前进度 第%d页 剩余%d页'</span>%(idx,index_end-idx))
+    sys.stdout.flush()
+    time.sleep(<span class="hljs-number">0.1</span>)
+</code></pre>
+<p>输出：<br>
+<code>当前进度 第1594页 剩余0页</code></p>
+<h1 id="2596203893">合并 ts 文件<button class="cnblogs-toc-button" title="显示目录导航"></button><a href="https://www.cnblogs.com/dataxon/p/12533110.html#2596203893" class="esa-anchor">#</a></h1>
+<p>第一种方式可以考虑，<strong>使用命令行操作</strong></p>
+<p><strong>如果是在windows上操作</strong></p>
+<ul>
+<li><code>copy  /b  路径\*.ts  路径\合并文件.ts</code></li>
+<li><code>copy /b “1.ts”+“2.ts”+…+”n.ts” /y “combine.ts”</code></li>
+</ul>
+<p><strong>如果是在mac上操作</strong></p>
+<ul>
+<li><code>cat 1.ts 2.ts &gt; combine.ts</code></li>
+</ul>
+<p>注意：文件的顺序要正确才行</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_22">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_22"><span class="hljs-comment"># 如果有ts文件的index</span>
+<span class="hljs-comment"># 那么可以用index直接来生成有顺序的list即可</span>
+file_list = [os.path.join(file_dir,ts_name[i]) \
+             <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span>  <span class="hljs-built_in">range</span>(index_start,index_end+<span class="hljs-number">1</span>)]
+
+<span class="hljs-comment"># 直接扫描路径下的ts文件也是可以的</span>
+<span class="hljs-comment"># 也可以删掉部分ts文件</span>
+<span class="hljs-comment"># file_list = glob.glob(os.path.join(file_dir,'*.ts'))</span>
+<span class="hljs-comment"># file_list.sort()</span>
+
+<span class="hljs-comment"># 这里是在mac上操作，所以名称以空格相连</span>
+filepath_cat = <span class="hljs-string">' '</span>.join(file_list)
+
+cmd_str = <span class="hljs-string">'cat '</span> + filepath_cat + <span class="hljs-string">'&gt; merge.ts'</span>
+<span class="hljs-comment"># cat 1.ts 2.ts &gt; combine.ts</span>
+
+os.system(cmd_str)
+</code></pre>
+<p>执行成功的话，会返回<code>0</code></p>
+<p>第二种合并ts文件的方式，可以<strong>将所有的ts文件按顺序写到一个新的文件中</strong>。</p>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_23">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_23">file_out = <span class="hljs-string">'merge_02.ts'</span>
+
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_out,<span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f_out:
+    <span class="hljs-keyword">for</span> f_in <span class="hljs-keyword">in</span> file_list:
+        f_out.write(<span class="hljs-built_in">open</span>(f_in,<span class="hljs-string">'rb'</span>).read())
+</code></pre>
+<h1 id="539404694">将合并的ts文件转化为视频文件<button class="cnblogs-toc-button" title="显示目录导航"></button><a href="https://www.cnblogs.com/dataxon/p/12533110.html#539404694" class="esa-anchor">#</a></h1>
+<p>最后，我们将合成的ts文件转化成视频文件(比如MP4格式)<br>
+这里我们<strong>调用 ffmpeg 将 ts 文件转化为视频文件</strong>。</p>
+<p>转化命令为</p>
+<ul>
+<li><code>ffmpeg -i 文件名称.ts -c copy [视频名称]</code></li>
+<li>e.g. <code>ffmpeg -i merge.ts -c copy '视频截取片段.mp4'</code></li>
+</ul>
+<pre class="highlighter-hljs" highlighted="true"><div data-tips="复制代码" class="esa-clipboard-button" data-clipboard-target="#copy_target_24">Copy</div><code class="language-python highlighter-hljs hljs" id="copy_target_24">file_in = os.path.join(work_dir,<span class="hljs-string">'merge.ts'</span>)
+
+<span class="hljs-comment">#如果路径中有空格，所以路径需要用上双引号，否则会找不到该文件</span>
+
+file_out = <span class="hljs-string">"merge.mp4"</span>
+
+<span class="hljs-comment"># 这里是去ffmpeg官网下载编译好的软件包，免安装的</span>
+cmd = <span class="hljs-string">'./ffmpeg -i '</span>+file_in +<span class="hljs-string">' -c copy '</span> + file_out
+
+os.system(cmd) <span class="hljs-comment"># 运行正常返回0</span>
+</code></pre>
+
+</div>
+<div id="MySignature" role="contentinfo"><div class="esa-post-signature"> 
+                        <p>作者：
+        dataxon
+    </p> 
+                        <p>出处：<a href="https://www.cnblogs.com/dataxon/p/12533110.html">https://www.cnblogs.com/dataxon/p/12533110.html</a></p> 
+                        <p>版权：本文采用「<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">署名-非商业性使用-相同方式共享 4.0 国际</a>」知识共享许可协议进行许可。</p> 
+                        <p>转载请注明作者及出处，公众号【dataxon】同步发文</p> 
+                    </div></div>
+<div class="clear"></div>
+<div id="blog_post_info_block" role="contentinfo">
+
+
+<div id="BlogPostCategory">
+    分类: 
+            <a href="https://www.cnblogs.com/dataxon/category/1674556.html" target="_blank">03_编程技能</a>
+</div>
+
+    <div id="blog_post_info">
+                <div class="esa-sponsor">
+                    <a class="github" href="https://github.com/dataxon" target="_blank" title="Github"></a>
+                    <div class="text tr3">Sponsor</div>
+                    <ul class="box posa tr3">
+                        <li class="paypal">PayPal</li>
+                        <li class="alipay">AliPay</li>
+                        <li class="wechat">WeChat</li>
+                    </ul>
+                    <div id="QRBox" class="posa left-100">
+                        <div id="MainBox"></div>
+                    </div>
+                </div>
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(12533110,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow(&#39;f50348d2-3bc0-4b70-4bf7-08d7cafa4eec&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareManager.wechatShare()"><img src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/dataxon/" target="_blank"><img src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/20200322151337.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/dataxon/">dataxon</a>
+            <br>
+            <a href="https://home.cnblogs.com/u/dataxon/followers/">粉丝 - <span class="follower-count">7</span></a>
+            <a href="https://home.cnblogs.com/u/dataxon/followees/">关注 - <span class="following-count">14</span></a><br>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow" class="follow-tip">
+                <a href="javascript:void(0);" onclick="follow(&#39;f50348d2-3bc0-4b70-4bf7-08d7cafa4eec&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(12533110,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(12533110,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script>
+</div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/dataxon/p/12530980.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/dataxon/p/12530980.html" data-featured-image="" title="发布于 2020-03-20 12:47">书单 | 数据分析</a>
+    <br>
+    <a href="https://www.cnblogs.com/dataxon/p/12533294.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/dataxon/p/12533294.html" data-featured-image="" title="发布于 2020-03-20 17:50">Python基础 | 日期时间操作</a>
+
+</div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date" data-last-update-days="1341.208188924441" data-date-created="BlogServer.Application.Dto.BlogPost.BlogPostDto" data-date-updated="2020-03-20 18:04" aria-expanded="false">2020-03-20 17:29</span>&nbsp;
+<a href="https://www.cnblogs.com/dataxon/">dataxon</a>&nbsp;
+阅读(<span id="post_view_count">8530</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=12533110" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(12533110);return false;">收藏</a>&nbsp;
+<a href="javascript:void(0)" onclick="reportManager.report({ currentUserId: &#39;&#39;, targetType: &#39;blogPost&#39;, targetId: &#39;12533110&#39;, targetLink: &#39;https://www.cnblogs.com/dataxon/p/12533110.html&#39;, title: &#39;爬虫 | Python下载m3u8视频&#39; })">举报</a>
+</div>
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script>
+    var cb_entryId = 12533110, cb_entryCreatedDate = '2020-03-20 17:29', cb_postType = 1, cb_postTitle = '爬虫 | Python下载m3u8视频';
+    var allowComments = true, cb_blogId = 587783, cb_blogApp = 'dataxon', cb_blogUserGuid = 'f50348d2-3bc0-4b70-4bf7-08d7cafa4eec';
+    mermaidRender.render()
+    markdown_highlight()
+    zoomManager.apply("#cnblogs_post_body img:not(.code_img_closed):not(.code_img_opened)");    
+</script>
+<a id="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav">
+            <a class="comment-nav-left" href="https://www.cnblogs.com/cmt/p/17520031.html" target="_blank">会员救园</a>
+        <div class="comment-nav-right">
+            <span id="span_refresh_tips"></span><a href="https://www.cnblogs.com/dataxon/p/12533110.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/dataxon/p/12533110.html#top">返回顶部</a>
+        </div>
+    </div>
+    <div id="comment_form_container"><div class="login_tips">
+    登录后才能查看或发表评论，立即 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return account.login(&#39;!comments&#39;);">登录</a> 或者
+    <a href="https://www.cnblogs.com/">逛逛</a> 博客园首页
+</div>
+</div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+        <div id="cnblogs_ch"><a href="https://click.aliyun.com/m/1000382715/" target="_blank" onclick="gtag(&#39;event&#39;, &#39;click&#39;, {&#39;event_category&#39;: &#39;ad&#39;, &#39;event_label&#39;: &#39;T2-阿里云-金秋云创季&#39;})">【推荐】阿里云金秋云创季：云服务器新秀99元/年，百款产品满减折上折</a><br><a href="https://click.ctyun.cn/?track=source_bokeyuan-medium_cps-content_se1100351" target="_blank" onclick="gtag(&#39;event&#39;, &#39;click&#39;, {&#39;event_category&#39;: &#39;ad&#39;, &#39;event_label&#39;: &#39;T2-天翼云-云端之旅&#39;})">【推荐】天翼云线上直播-云端之旅：6代云主机的优势与最佳实践详解</a><br><a href="https://news.cnblogs.com/n/753696/" target="_blank" onclick="gtag(&#39;event&#39;, &#39;click&#39;, {&#39;event_category&#39;: &#39;ad&#39;, &#39;event_label&#39;: &#39;T2-推广新闻-网络安全&#39;})">【推荐】实现有效的信息安全，网络安全需要采取新方案</a><br></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="under-post-card" style="display: none;">
+            <div id="div-gpt-ad-1592365906576-0" style="width: 300px; height: 250px;"></div>
+    </div>
+    <div id="under_post_card1"><div class="under-post-card">
+<b>编辑推荐：</b>
+<br>
+
+· <a href="https://www.cnblogs.com/CreateMyself/p/17830637.html" target="_blank">你所不知道的 ASP.NET Core 进阶系列（三）</a>
+    <br>
+· <a href="https://www.cnblogs.com/pengze0902/p/17830689.html" target="_blank">C# 中 Dictionary&lt; TKey, TValue &gt; 的存储结构分析</a>
+    <br>
+· <a href="https://www.cnblogs.com/hobbybear/p/17839342.html" target="_blank">mysql group by 执行原理及千万级别 count 查询优化</a>
+    <br>
+· <a href="https://www.cnblogs.com/whuanle/p/17837034.html" target="_blank">万字长文：从 C# 入门学会 RabbitMQ 消息队列编程</a>
+    <br>
+· <a href="https://www.cnblogs.com/chends/p/17824173.html" target="_blank">千里之堤溃于蚁穴，质量问题警钟长鸣</a>
+    <br>
+</div></div>
+    <div id="under_post_card2"><div class="itnews under-post-card">
+    <b>阅读排行：</b>
+    <br>
+ ·          <a href="https://www.cnblogs.com/xueweihan/p/17843129.html" target="_blank">这些新项目一定不要错过「GitHub 热点速览」</a>
+        <br>
+ ·          <a href="https://www.cnblogs.com/CreateMyself/p/17830637.html" target="_blank">你所不知道的ASP.NET Core进阶系列（三）</a>
+        <br>
+ ·          <a href="https://www.cnblogs.com/shawshank/p/17817414.html" target="_blank">Avalonia 实现跨平台的IM即时通讯、语音视频通话（源码，支持信创国产OS，统信、银河麒麟）</a>
+        <br>
+ ·          <a href="https://www.cnblogs.com/Can-daydayup/p/17844951.html" target="_blank">七天.NET 8操作SQLite入门到实战 - SQLite 简介</a>
+        <br>
+ ·          <a href="https://www.cnblogs.com/grey-wolf/p/17845054.html" target="_blank">如何实现一套简单的oauth2授权码类型认证，一些思路，供参考</a>
+        <br>
+</div></div>
+    <div id="HistoryToday" class="under-post-card"></div>
+    <script type="text/javascript">
+        var commentManager = new blogCommentManager();
+        commentManager.renderComments(0);
+        fixPostBody();
+        window.footnoteTipManager.generateFootnoteTips();
+
+            window.tocManager.displayDisableTocTips = false;
+            window.tocManager.generateToc();
+            
+                setTimeout(function() { countViews(cb_blogId, cb_entryId); }, 50);
+            
+            deliverT2();
+            deliverC1C2();
+            loadNewsAndKb();
+            
+                LoadPostCategoriesTags(cb_blogId, cb_entryId);
+            
+            LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+            GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+            loadOptUnderPost();
+            GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+                </script>
+</div>
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+	<div id="sideBar">
+		<div id="sideBarMain">
+			<div id="sidebar_news" class="newsItem">
+    <h3 class="catListTitle">公告</h3>
+<div id="blog-news">    
+    <div id="sidebar_news_content"><script type="text/javascript">window['__document_write_ajax_callbacks__']['4']();</script><script type="text/javascript">window['__document_write_ajax_callbacks__']['5']();</script><script>window['__document_write_ajax_callbacks__']['1']();</script>
+<script type="text/javascript">window['__document_write_ajax_callbacks__']['6']();</script><script type="text/javascript">window['__document_write_ajax_callbacks__']['2']();</script>
+<div id="profile_block">
+    昵称：
+    <a href="https://home.cnblogs.com/u/dataxon/">
+        dataxon
+    </a>
+    <br>
+    园龄：
+    <a href="https://home.cnblogs.com/u/dataxon/" title="入园时间：2020-03-19">
+        3年8个月
+    </a>
+    <br>
+    粉丝：
+    <a class="follower-count" href="https://home.cnblogs.com/u/dataxon/followers/">
+        7
+    </a>
+    <br>
+    关注：
+    <a class="folowing-count" href="https://home.cnblogs.com/u/dataxon/followees/">
+        14
+    </a>
+    <div id="p_b_follow" class="follow-tip">
+<a href="javascript:void(0)" onclick="follow(&#39;f50348d2-3bc0-4b70-4bf7-08d7cafa4eec&#39;)">+加关注</a></div>
+    <script type="text/javascript">window['__document_write_ajax_callbacks__']['7']();</script><script>window['__document_write_ajax_callbacks__']['3']();</script>
+</div>
+</div>
+</div>
+<script>loadBlogNews();</script>
+
+ 
+</div>
+<div id="sidebar_c3"></div>
+			<div id="blog-calendar" style="display:none"></div><script>loadBlogDefaultCalendar();</script>			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div class="mySearch my-search">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+<div id="sidebar_shortcut" class="sidebar-block"><div class="catListLink">
+<h3 class="catListTitle">
+常用链接
+</h3>
+<ul>
+    <li><a href="https://www.cnblogs.com/dataxon/p/" title="我的博客的随笔列表">我的随笔</a></li>
+<li><a href="https://www.cnblogs.com/dataxon/MyComments.html" title="我的发表过的评论列表">我的评论</a></li>
+<li><a href="https://www.cnblogs.com/dataxon/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li>
+<li><a href="https://www.cnblogs.com/dataxon/comments" title="我的博客的评论列表">最新评论</a></li>
+<li><a href="https://www.cnblogs.com/dataxon/tag/" title="我的博客的标签列表">我的标签</a></li>
+
+</ul>
+</div>
+
+</div>
+
+<!-- 最新随笔 -->
+<div id="sidebar_recentposts" class="sidebar-block"><div class="catListEssay">
+<h3 class="catListTitle">最新随笔</h3>
+    <ul>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/13491592.html">1.产品中的异常行为分析</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12784906.html">2.数据分析的层级</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12636005.html">3.如何做用户分层或用户分群</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12634911.html">4.Python基础 | pandas基础统计</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12634897.html">5.Python基础 | pandas中dataframe的整合与形变(merge &amp; reshape)</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12566447.html">6.Python基础 | pandas中数据的筛选(index &amp; subset)</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12563843.html">7.Python基础 | 关于“循环”那些事</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12556727.html">8.Python基础 | 数据文件的读写</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12556329.html">9.Python基础 | 字符串操作</a>
+
+                </li>
+                <li>
+                    
+<a href="https://www.cnblogs.com/dataxon/p/12552417.html">10.如何用数据说谎 How to lie with data</a>
+
+                </li>
+    </ul>
+</div>
+
+</div>
+
+<!-- 我的标签 -->
+<div id="sidebar_toptags" class="sidebar-block"><div class="catListTag">
+    <h3 class="catListTitle"><a href="https://www.cnblogs.com/dataxon/tag/" class="sidebar-card-title-a">我的标签</a></h3>
+<ul>
+        <li>
+            <a href="https://www.cnblogs.com/dataxon/tag/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">数据分析<span class="tag-count">(6)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/dataxon/tag/Python/">Python<span class="tag-count">(4)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/dataxon/tag/%E8%B5%84%E6%BA%90%E6%8E%A8%E8%8D%90/">资源推荐<span class="tag-count">(2)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/dataxon/tag/%E6%9D%82%E8%B0%88/">杂谈<span class="tag-count">(1)</span></a>
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/dataxon/tag/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习<span class="tag-count">(1)</span></a>
+        </li>
+    
+
+</ul>
+</div>
+
+</div>
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+
+    <div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+        <h3 class="catListTitle">
+            
+    <a class="sidebar-card-title-a" href="https://www.cnblogs.com/dataxon/post-categories">随笔分类</a>
+
+
+
+        </h3>
+
+        <ul>
+
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/dataxon/category/1675379.html" style="--cnb-category-item-link-indent-size: calc(0 * 1em)" class="category-item-link" rel="" target="">00_资源推荐(6)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/dataxon/category/1674539.html" style="--cnb-category-item-link-indent-size: calc(0 * 1em)" class="category-item-link" rel="" target="">01_数据分析(12)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/dataxon/category/1674540.html" style="--cnb-category-item-link-indent-size: calc(0 * 1em)" class="category-item-link" rel="" target="">02_机器学习(4)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/dataxon/category/1674556.html" style="--cnb-category-item-link-indent-size: calc(0 * 1em)" class="category-item-link" rel="" target="">03_编程技能(13)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/dataxon/category/1677088.html" style="--cnb-category-item-link-indent-size: calc(0 * 1em)" class="category-item-link" rel="" target="">04_业务分析(3)</a>
+ 
+                </li>                
+                <li data-category-list-item-visible="true" style="display: block">
+                    
+<a href="https://www.cnblogs.com/dataxon/category/1675067.html" style="--cnb-category-item-link-indent-size: calc(0 * 1em)" class="category-item-link" rel="" target="">05_谈点别的(6)</a>
+ 
+                </li>                
+            
+        </ul>
+
+
+    </div>    
+</div>
+
+<!-- 最新评论 -->
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block"><div class="catListView">
+    <h3 class="catListTitle">
+        <a href="https://www.cnblogs.com/dataxon/most-viewed" class="sidebar-card-title-a">
+    阅读排行榜
+</a>
+
+    </h3>
+    <div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12566447.html">
+                            1. Python基础 | pandas中数据的筛选(index &amp; subset)(12914)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12634897.html">
+                            2. Python基础 | pandas中dataframe的整合与形变(merge &amp; reshape)(8939)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12533110.html">
+                            3. 爬虫 | Python下载m3u8视频(8528)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12556727.html">
+                            4. Python基础 | 数据文件的读写(3665)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12636005.html">
+                            5. 如何做用户分层或用户分群(2879)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12552337.html">
+                            6. 浅谈“数据敏感度”(2344)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12538524.html">
+                            7. 机器学习基础 | 分类模型评估指标(1926)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12544467.html">
+                            8. 业务模型 | “人-货-场”(1803)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12540191.html">
+                            9. 机器学习基础 | 回归模型评估指标(1626)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12523270.html">
+                            10. 数据分析中的常用“公式”(1326)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block"><div class="catListFeedback">
+    <h3 class="catListTitle">
+        <a href="https://www.cnblogs.com/dataxon/most-commented" class="sidebar-card-title-a">评论排行榜</a>
+
+    </h3>
+    <div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/dataxon/p/12549354.html">
+                            1. 从一道面试题谈数据推算方法(4)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div></div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">
+            <a href="https://www.cnblogs.com/dataxon/most-liked" class="sidebar-card-title-a">推荐排行榜</a>
+
+        </h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/dataxon/p/12556727.html">
+                                1. Python基础 | 数据文件的读写(1)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div></div><div id="sidebar_recentcomments" class="sidebar-block"><div class="catListComment">
+<h3 class="catListTitle"><a href="https://www.cnblogs.com/dataxon/comments" class="sidebar-card-title-a">最新评论</a></h3>
+    <div class="RecentCommentBlock">
+        <ul>
+                <li class="recent_comment_title"><a href="https://www.cnblogs.com/dataxon/p/12549354.html">1. Re:从一道面试题谈数据推算方法</a></li>
+                <li class="recent_comment_body">@可爱多123456 谢谢支持...</li>
+                <li class="recent_comment_author">--dataxon</li>
+                <li class="recent_comment_title"><a href="https://www.cnblogs.com/dataxon/p/12549354.html">2. Re:从一道面试题谈数据推算方法</a></li>
+                <li class="recent_comment_body">@beautifulzzzz 哈哈，用PPT画的...</li>
+                <li class="recent_comment_author">--dataxon</li>
+                <li class="recent_comment_title"><a href="https://www.cnblogs.com/dataxon/p/12549354.html">3. Re:从一道面试题谈数据推算方法</a></li>
+                <li class="recent_comment_body"><p>厉害了</p>
+</li>
+                <li class="recent_comment_author">--可爱多123456</li>
+                <li class="recent_comment_title"><a href="https://www.cnblogs.com/dataxon/p/12549354.html">4. Re:从一道面试题谈数据推算方法</a></li>
+                <li class="recent_comment_body"><p>头像不错</p>
+</li>
+                <li class="recent_comment_author">--beautifulzzzz</li>
+        </ul>
+    </div>
+</div>
+
+</div>
+
+
+</div>
+                    <script>loadBlogSideColumn();</script>
+			</div>			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright © 2023 dataxon
+<br><span id="poweredby">Powered by .NET 8.0 on Kubernetes</span>
+
+
+
+	<span class="esa-copyright">&amp; Theme <a href="https://github.com/esofar/cnblogs-theme-silence" target="_blank">Silence v2.0.2</a></span></div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+
+    
+
+    <input type="hidden" id="antiforgery_token" value="CfDJ8Eg9kra6YURKsOjJwROiT4upn-O89qJIIiUFDmgEJLo6iLUPvGibXBY-o7tbDPXkqYc02a5K6AoX-x0KFFjl5lSKv7vLvRYUFnpFoN3oLrmwesxnn-dgH5VYKeIFAxWvlUqyOZ6oFjTQLMoDNen-7Gg">
+    <script async="" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-M95P3TTWJZ');
+</script>
+<script defer="" src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/hm.js.下载"></script>
+
+<div style="z-index: 998; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; flex-direction: column; align-items: center; justify-content: center">
+<div style="background: #fff;padding: 30px; margin: 30px; border-radius: 16px;">
+  <div style="width: 200px; height: 200px; background: rgba(255, 255, 255, 0.8); position: absolute; top: -100px; right: -100px; border-radius: 100px"></div>
+  <div style="text-align: center; font-size: 18px; margin-bottom: 10px;">点击右上角即可分享</div>
+  <img src="./爬虫 _ Python下载m3u8视频 - dataxon - 博客园_files/35695-20230906145857937-1471873834.gif" alt="微信分享提示">
+</div>   
+    </div><script type="text/javascript">
+    $.silence({
+        avatar: 'https://images.cnblogs.com/cnblogs_com/dataxon/1675707/o_200322071523Ahong_logo_bold.png',
+        favicon: 'https://blog-static.cnblogs.com/files/dataxon/dataxon_favicon.ico',
+        navigation: [
+            {
+                title: '归档',
+                url: 'https://www.cnblogs.com/dataxon/p/'
+            },
+           {
+                title: '资源',
+                chilren: [
+                    {
+                        title: '数据网站导航',
+                        url: 'http://hao.199it.com/',
+                    },
+                    {
+                        title: '在线工具大全',
+                        url: 'https://tool.lu/',
+                    },
+                    {   
+                        title: '数据分析资源',
+                        url: 'https://www.cnblogs.com/dataxon/p/12535666.html',
+                    },
+                    {   
+                        title: '机器学习资源',
+                        url: 'https://www.cnblogs.com/dataxon/p/12536516.html',
+                    },
+ 
+                  {   
+                        title: 'Python 资源',
+                        url: 'http://jobbole.github.io/awesome-python-cn/',
+                    },
+                    {
+                        title: '技术学习资源',
+                        url: 'https://www.cnblogs.com/dataxon/p/12530971.html',
+                    },
+                ]
+            },
+        ],
+        catalog: {
+            enable: true,
+            move: true,
+            index: true,
+            level1: 'h1',
+            level2: 'h2',
+            level3: 'h3',
+            level4: 'h4',
+        },
+        signature: {
+            enable: true,
+            license: '署名-非商业性使用-相同方式共享 4.0 国际',
+            link: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+            remark: '转载请注明作者及出处，公众号【dataxon】同步发文',
+        },
+        sponsor: {
+            enable: true,
+            paypal: null,
+            wechat: null,
+            alipay: null
+        },
+        github: {
+            enable: true,
+            link: 'https://github.com/dataxon',
+	    target: '_self'
+        }
+    });
+</script><a href="https://github.com/dataxon" class="github-corner" title="Fork me on GitHub" target="_self">
+                        <svg width="60" height="60" viewBox="0 0 250 250" style=" color:#fff; z-index: 999; position: fixed; top: 0; border: 0; left: 0; transform: scale(-1, 1);" aria-hidden="true">
+                            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+                            <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+                            <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path>
+                        </svg>
+                    </a><div class="esa-catalog">
+                        <div class="esa-catalog-contents" style="display: block;">
+                            <div class="esa-catalog-title">CONTENTS</div>
+                            <a class="esa-catalog-close">✕</a>
+                        <ul><li class="li_h1" title="从 m3u8 文件中解析出 ts 信息">
+                            <i class="2642601656"></i><a class="esa-anchor-link"><span class="level1">1. </span>从 m3u8 文件中解析出 ts 信息</a>
+                        </li><li class="li_h1" title="按时间截取视频">
+                            <i class="1783961223"></i><a class="esa-anchor-link"><span class="level1">2. </span>按时间截取视频</a>
+                        </li><li class="li_h1" title="抓取 ts 文件">
+                            <i class="465132375"></i><a class="esa-anchor-link"><span class="level1">3. </span>抓取 ts 文件</a>
+                        </li><li class="li_h2" title="单文件测试">
+                            <i class="3969111130"></i><a class="esa-anchor-link"><span class="level2">3.1. </span>单文件测试</a>
+                        </li><li class="li_h2" title="批量下载">
+                            <i class="4126256877"></i><a class="esa-anchor-link"><span class="level2">3.2. </span>批量下载</a>
+                        </li><li class="li_h1" title="合并 ts 文件">
+                            <i class="2596203893"></i><a class="esa-anchor-link"><span class="level1">4. </span>合并 ts 文件</a>
+                        </li><li class="li_h1" title="将合并的ts文件转化为视频文件">
+                            <i class="539404694"></i><a class="esa-anchor-link"><span class="level1">5. </span>将合并的ts文件转化为视频文件</a>
+                        </li></ul></div>
+                    </div><div class="esa-toolbar">
+                <button class="esa-toolbar-gotop" data-tips="返回顶部"></button>
+                <button class="esa-toolbar-contents" data-tips="阅读目录"></button>
+                <button class="esa-toolbar-follow" data-tips="关注博主"></button>
+            </div><script type="text/javascript">getFollowStatus('f50348d2-3bc0-4b70-4bf7-08d7cafa4eec');</script><div id="lightboxOverlay" tabindex="-1" class="lightboxOverlay" style="display: none;"></div><div id="lightbox" tabindex="-1" class="lightbox" style="display: none;"><div class="lb-outerContainer"><div class="lb-container"><img class="lb-image" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt=""><div class="lb-nav"><a class="lb-prev" aria-label="Previous image" href="https://www.cnblogs.com/dataxon/p/12533110.html"></a><a class="lb-next" aria-label="Next image" href="https://www.cnblogs.com/dataxon/p/12533110.html"></a></div><div class="lb-loader"><a class="lb-cancel"></a></div></div></div><div class="lb-dataContainer"><div class="lb-data"><div class="lb-details"><span class="lb-caption"></span><span class="lb-number"></span></div><div class="lb-closeContainer"><a class="lb-close"></a></div></div></div></div></body></html>
